@@ -1,4 +1,4 @@
-# log [![Build Status](https://travis-ci.org/haormj/log.svg?branch=master)](https://travis-ci.org/haormj/log)
+# Log [![Build Status](https://travis-ci.org/haormj/log.svg?branch=master)](https://travis-ci.org/haormj/log) [![GoDoc](https://godoc.org/github.com/haormj/log?status.svg)](https://godoc.org/github.com/haormj/log) [![Go Report Card](https://goreportcard.com/badge/github.com/haormj/log)](https://goreportcard.com/report/github.com/haormj/log)
 
 A simple go log.
 
