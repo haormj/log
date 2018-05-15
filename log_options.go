@@ -8,8 +8,11 @@ import (
 
 type level string
 
+type encoder string
+
 // Options uber log
 type Options struct {
+	Encoder        encoder
 	Level          level
 	MessageKey     string
 	LevelKey       string
@@ -41,8 +44,14 @@ var (
 	ERR level = "error"
 )
 
+var (
+	Json    encoder = "json"
+	Console encoder = "console"
+)
+
 func newOptions(opts ...Option) (options Options) {
 	options = Options{
+		Encoder:        Console,
 		Level:          INF,
 		MessageKey:     "message",
 		LevelKey:       "level",
@@ -81,6 +90,14 @@ func Filename(name string) Option {
 func Level(l level) Option {
 	return func(o *Options) {
 		o.Level = l
+	}
+}
+
+// Encoder choose json/console
+// default is console
+func Encoder(e encoder) Option {
+	return func(o *Options) {
+		o.Encoder = e
 	}
 }
 

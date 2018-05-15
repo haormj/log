@@ -32,7 +32,14 @@ func NewLog(opts ...Option) Log {
 		EncodeCaller:   options.EncodeCaller,
 		EncodeName:     options.EncodeName,
 	}
-	encoder := zapcore.NewJSONEncoder(encoderConfig)
+
+	var encoder zapcore.Encoder
+	switch options.Encoder {
+	case Console:
+		encoder = zapcore.NewConsoleEncoder(encoderConfig)
+	case Json:
+		encoder = zapcore.NewJSONEncoder(encoderConfig)
+	}
 
 	var writeSyncer zapcore.WriteSyncer
 	if len(options.Filename) == 0 {

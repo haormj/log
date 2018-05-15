@@ -26,7 +26,7 @@ type logKey struct{}
 
 var (
 	// DefaultLog default use uber log
-	DefaultLog = NewLog()
+	Logger = NewLog()
 )
 
 // NewContext put Log to context
@@ -38,45 +38,4 @@ func NewContext(ctx context.Context, l Log) context.Context {
 func FromContext(ctx context.Context) (Log, bool) {
 	log, ok := ctx.Value(logKey{}).(Log)
 	return log, ok
-}
-
-func Debug(keysAndValues ...interface{}) {
-	DefaultLog.Debug(keysAndValues...)
-}
-
-func Debugw(msg string, keysAndValues ...interface{}) {
-	DefaultLog.Debugw(msg, keysAndValues...)
-}
-
-func Info(keysAndValues ...interface{}) {
-	DefaultLog.Info(keysAndValues...)
-}
-
-func Infow(msg string, keysAndValues ...interface{}) {
-	DefaultLog.Infow(msg, keysAndValues...)
-}
-
-func Warn(keysAndValues ...interface{}) {
-	DefaultLog.Warn(keysAndValues...)
-}
-
-func Warnw(msg string, keysAndValues ...interface{}) {
-	DefaultLog.Warnw(msg, keysAndValues...)
-}
-
-func Error(keysAndValues ...interface{}) {
-	DefaultLog.Error(keysAndValues...)
-}
-
-func Errorw(msg string, keysAndValues ...interface{}) {
-	DefaultLog.Errorw(msg, keysAndValues...)
-
-}
-
-func With(keysAndValues ...interface{}) Log {
-	return DefaultLog.With(keysAndValues...)
-}
-
-func Flush() error {
-	return DefaultLog.Flush()
 }
