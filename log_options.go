@@ -87,6 +87,7 @@ func Filename(name string) Option {
 }
 
 // Level log level
+// default is INF
 func Level(l level) Option {
 	return func(o *Options) {
 		o.Level = l
