@@ -94,6 +94,21 @@ func Level(l level) Option {
 	}
 }
 
+// ParseLevel parse string to level
+func ParseLevel(l string) level {
+	switch l {
+	case "debug":
+		return DEG
+	case "info":
+		return INF
+	case "warn":
+		return WRN
+	case "error":
+		return ERR
+	}
+	return INF
+}
+
 // Encoder choose json/console
 // default is console
 func Encoder(e encoder) Option {
