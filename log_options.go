@@ -117,6 +117,17 @@ func Encoder(e encoder) Option {
 	}
 }
 
+// ParseEncoder parse string to encoder
+func ParseEncoder(e string) encoder {
+	switch e {
+	case "json":
+		return Json
+	case "console":
+		return Console
+	}
+	return Console
+}
+
 // LevelEncoder format level name
 func LevelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 	var level string
