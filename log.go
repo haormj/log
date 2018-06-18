@@ -8,15 +8,19 @@ import (
 type Log interface {
 	Debug(keysAndValues ...interface{})
 	Debugw(msg string, keysAndValues ...interface{})
+	Debugf(format string, a ...interface{})
 
 	Info(keysAndValues ...interface{})
 	Infow(msg string, keysAndValues ...interface{})
+	Infof(format string, a ...interface{})
 
 	Warn(keysAndValues ...interface{})
 	Warnw(msg string, keysAndValues ...interface{})
+	Warnf(format string, a ...interface{})
 
 	Error(keysAndValues ...interface{})
 	Errorw(msg string, keysAndValues ...interface{})
+	Errorf(format string, a ...interface{})
 
 	With(keysAndValues ...interface{}) Log
 	Flush() error

@@ -75,6 +75,11 @@ func (u *Uber) Debugw(msg string, keysAndValues ...interface{}) {
 	u.sugar.Debugw(msg, keysAndValues...)
 }
 
+// Debugf formats according to a format specifier
+func (u *Uber) Debugf(format string, a ...interface{}) {
+	u.sugar.Debugf(format, a...)
+}
+
 // Info key value
 func (u *Uber) Info(keysAndValues ...interface{}) {
 	u.sugar.Infow("", keysAndValues...)
@@ -83,6 +88,11 @@ func (u *Uber) Info(keysAndValues ...interface{}) {
 // Infow with message
 func (u *Uber) Infow(msg string, keysAndValues ...interface{}) {
 	u.sugar.Infow(msg, keysAndValues...)
+}
+
+// Infof formats according to a format specifier
+func (u *Uber) Infof(format string, a ...interface{}) {
+	u.sugar.Infof(format, a...)
 }
 
 // Warn key value
@@ -95,6 +105,11 @@ func (u *Uber) Warnw(msg string, keysAndValues ...interface{}) {
 	u.sugar.Warnw(msg, keysAndValues...)
 }
 
+// Warnf formats according to a format specifier
+func (u *Uber) Warnf(format string, a ...interface{}) {
+	u.sugar.Warnf(format, a...)
+}
+
 // Error key value
 func (u *Uber) Error(keysAndValues ...interface{}) {
 	u.sugar.Errorw("", keysAndValues...)
@@ -103,6 +118,11 @@ func (u *Uber) Error(keysAndValues ...interface{}) {
 // Errorw with message
 func (u *Uber) Errorw(msg string, keysAndValues ...interface{}) {
 	u.sugar.Errorw(msg, keysAndValues...)
+}
+
+// Errorf formats according to a format specifier
+func (u *Uber) Errorf(format string, a ...interface{}) {
+	u.sugar.Errorf(format, a...)
 }
 
 // With key value
