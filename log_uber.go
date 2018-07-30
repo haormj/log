@@ -1,6 +1,7 @@
 package log
 
 import (
+	"fmt"
 	"os"
 
 	"go.uber.org/zap"
@@ -65,9 +66,29 @@ func NewLog(opts ...Option) Log {
 	}
 }
 
+func (u *Uber) logv(keysAndValues ...interface{}) []interface{} {
+	length := len(keysAndValues)
+	if length%2 == 0 {
+		kvs := make([]interface{}, length)
+		for i := 0; i < length; i = i + 2 {
+			key := keysAndValues[i]
+			value := keysAndValues[i+1]
+			keyStr := fmt.Sprintf("%+v", key)
+			valueStr := fmt.Sprintf("%+v", value)
+			kvs = append(kvs, keyStr, valueStr)
+		}
+		return kvs
+	}
+	return keysAndValues
+}
+
 // Debug key value
 func (u *Uber) Debug(keysAndValues ...interface{}) {
 	u.sugar.Debugw("", keysAndValues...)
+}
+
+func (u *Uber) Debugv(keysAndValues ...interface{}) {
+	u.Debug(u.logv(keysAndValues)...)
 }
 
 // Debugw with message
@@ -85,6 +106,10 @@ func (u *Uber) Info(keysAndValues ...interface{}) {
 	u.sugar.Infow("", keysAndValues...)
 }
 
+func (u *Uber) Infov(keysAndValues ...interface{}) {
+	u.Info(u.logv(keysAndValues)...)
+}
+
 // Infow with message
 func (u *Uber) Infow(msg string, keysAndValues ...interface{}) {
 	u.sugar.Infow(msg, keysAndValues...)
@@ -98,6 +123,10 @@ func (u *Uber) Infof(format string, a ...interface{}) {
 // Warn key value
 func (u *Uber) Warn(keysAndValues ...interface{}) {
 	u.sugar.Warnw("", keysAndValues...)
+}
+
+func (u *Uber) Warnv(keysAndValues ...interface{}) {
+	u.Warn(u.logv(keysAndValues)...)
 }
 
 // Warnw with message
@@ -115,6 +144,10 @@ func (u *Uber) Error(keysAndValues ...interface{}) {
 	u.sugar.Errorw("", keysAndValues...)
 }
 
+func (u *Uber) Errorv(keysAndValues ...interface{}) {
+	u.Error(u.logv(keysAndValues)...)
+}
+
 // Errorw with message
 func (u *Uber) Errorw(msg string, keysAndValues ...interface{}) {
 	u.sugar.Errorw(msg, keysAndValues...)
@@ -130,6 +163,10 @@ func (u *Uber) With(keysAndValues ...interface{}) Log {
 	return &Uber{
 		sugar: u.sugar.With(keysAndValues...),
 	}
+}
+
+func (u *Uber) Withv(keysAndValues ...interface{}) Log {
+	return u.With(u.logv(keysAndValues)...)
 }
 
 // Flush buffered log

@@ -7,22 +7,27 @@ import (
 // Log interface
 type Log interface {
 	Debug(keysAndValues ...interface{})
+	Debugv(keysAndValues ...interface{})
 	Debugw(msg string, keysAndValues ...interface{})
 	Debugf(format string, a ...interface{})
 
 	Info(keysAndValues ...interface{})
+	Infov(keysAndValues ...interface{})
 	Infow(msg string, keysAndValues ...interface{})
 	Infof(format string, a ...interface{})
 
 	Warn(keysAndValues ...interface{})
+	Warnv(keysAndValues ...interface{})
 	Warnw(msg string, keysAndValues ...interface{})
 	Warnf(format string, a ...interface{})
 
 	Error(keysAndValues ...interface{})
+	Errorv(keysAndValues ...interface{})
 	Errorw(msg string, keysAndValues ...interface{})
 	Errorf(format string, a ...interface{})
 
 	With(keysAndValues ...interface{}) Log
+	Withv(keysAndValues ...interface{}) Log
 	Flush() error
 }
 
