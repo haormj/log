@@ -80,8 +80,8 @@ func (u *Uber) Debug(keysAndValues ...interface{}) {
 }
 
 // Debugv use %+v
-func (u *Uber) Debugv(keysAndValues ...interface{}) {
-	u.sugar.Debugw("", u.logv(keysAndValues)...)
+func (u *Uber) Debugv(msg string, keysAndValues ...interface{}) {
+	u.sugar.Debugw(msg, u.logv(keysAndValues)...)
 }
 
 // Debugw with message
@@ -100,8 +100,8 @@ func (u *Uber) Info(keysAndValues ...interface{}) {
 }
 
 // Infov use %+v
-func (u *Uber) Infov(keysAndValues ...interface{}) {
-	u.sugar.Infow("", u.logv(keysAndValues)...)
+func (u *Uber) Infov(msg string, keysAndValues ...interface{}) {
+	u.sugar.Infow(msg, u.logv(keysAndValues)...)
 }
 
 // Infow with message
@@ -120,8 +120,8 @@ func (u *Uber) Warn(keysAndValues ...interface{}) {
 }
 
 // Warnv use %+v
-func (u *Uber) Warnv(keysAndValues ...interface{}) {
-	u.sugar.Warnw("", u.logv(keysAndValues)...)
+func (u *Uber) Warnv(msg string, keysAndValues ...interface{}) {
+	u.sugar.Warnw(msg, u.logv(keysAndValues)...)
 }
 
 // Warnw with message
@@ -140,8 +140,8 @@ func (u *Uber) Error(keysAndValues ...interface{}) {
 }
 
 // Errorv use %+v
-func (u *Uber) Errorv(keysAndValues ...interface{}) {
-	u.sugar.Errorw("", u.logv(keysAndValues)...)
+func (u *Uber) Errorv(msg string, keysAndValues ...interface{}) {
+	u.sugar.Errorw(msg, u.logv(keysAndValues)...)
 }
 
 // Errorw with message
