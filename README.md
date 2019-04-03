@@ -33,3 +33,5 @@ func hello(ctx context.Context) {
 	l.Info("hello", "world")
 }
 ```
+
+If you use `With`, and pass `Log` through `Context`, pay attention to the life cycle of the `Context` to prevent memory increase
