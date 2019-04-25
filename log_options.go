@@ -45,7 +45,7 @@ var (
 )
 
 var (
-	Json    encoder = "json"
+	JSON    encoder = "json"
 	Console encoder = "console"
 )
 
@@ -121,7 +121,7 @@ func Encoder(e encoder) Option {
 func ParseEncoder(e string) encoder {
 	switch e {
 	case "json":
-		return Json
+		return JSON
 	case "console":
 		return Console
 	}

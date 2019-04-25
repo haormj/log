@@ -38,7 +38,7 @@ func NewLog(opts ...Option) Log {
 	switch options.Encoder {
 	case Console:
 		encoder = zapcore.NewConsoleEncoder(encoderConfig)
-	case Json:
+	case JSON:
 		encoder = zapcore.NewJSONEncoder(encoderConfig)
 	}
 
