@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -12,6 +13,8 @@ import (
 // Uber log
 type Uber struct {
 	sugar *zap.SugaredLogger
+	kvs   []interface{}
+	rw    sync.RWMutex
 }
 
 // NewLog uber log
@@ -63,108 +66,140 @@ func NewLog(opts ...Option) Log {
 
 	return &Uber{
 		sugar: logger.Sugar(),
+		kvs:   make([]interface{}, 0),
+		rw:    sync.RWMutex{},
 	}
 }
 
-func (u *Uber) logv(args []interface{}) []interface{} {
-	kvs := make([]interface{}, 0)
-	for _, v := range args {
-		kvs = append(kvs, fmt.Sprintf("%+v", v))
-	}
+func (u *Uber) get() []interface{} {
+	u.rw.RLock()
+	kvs := make([]interface{}, len(u.kvs))
+	copy(kvs, u.kvs)
+	u.rw.RUnlock()
 	return kvs
+}
+
+func (u *Uber) format(format string, a []interface{}) string {
+	// Format with Sprint, Sprintf, or neither.
+	msg := format
+	if msg == "" && len(a) > 0 {
+		msg = fmt.Sprint(a...)
+	} else if msg != "" && len(a) > 0 {
+		msg = fmt.Sprintf(format, a...)
+	}
+	return msg
 }
 
 // Debug key value
 func (u *Uber) Debug(keysAndValues ...interface{}) {
-	u.sugar.Debugw("", keysAndValues...)
-}
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
 
-// Debugv use %+v
-func (u *Uber) Debugv(msg string, keysAndValues ...interface{}) {
-	u.sugar.Debugw(msg, u.logv(keysAndValues)...)
+	u.sugar.Debugw("", kvs...)
 }
 
 // Debugw with message
 func (u *Uber) Debugw(msg string, keysAndValues ...interface{}) {
-	u.sugar.Debugw(msg, keysAndValues...)
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
+
+	u.sugar.Debugw(msg, kvs...)
 }
 
 // Debugf formats according to a format specifier
 func (u *Uber) Debugf(format string, a ...interface{}) {
-	u.sugar.Debugf(format, a...)
+	kvs := u.get()
+	msg := u.format(format, a)
+
+	u.sugar.Debugw(msg, kvs...)
 }
 
 // Info key value
 func (u *Uber) Info(keysAndValues ...interface{}) {
-	u.sugar.Infow("", keysAndValues...)
-}
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
 
-// Infov use %+v
-func (u *Uber) Infov(msg string, keysAndValues ...interface{}) {
-	u.sugar.Infow(msg, u.logv(keysAndValues)...)
+	u.sugar.Infow("", kvs...)
 }
 
 // Infow with message
 func (u *Uber) Infow(msg string, keysAndValues ...interface{}) {
-	u.sugar.Infow(msg, keysAndValues...)
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
+
+	u.sugar.Infow(msg, kvs...)
 }
 
 // Infof formats according to a format specifier
 func (u *Uber) Infof(format string, a ...interface{}) {
-	u.sugar.Infof(format, a...)
+	kvs := u.get()
+	msg := u.format(format, a)
+
+	u.sugar.Infow(msg, kvs...)
 }
 
 // Warn key value
 func (u *Uber) Warn(keysAndValues ...interface{}) {
-	u.sugar.Warnw("", keysAndValues...)
-}
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
 
-// Warnv use %+v
-func (u *Uber) Warnv(msg string, keysAndValues ...interface{}) {
-	u.sugar.Warnw(msg, u.logv(keysAndValues)...)
+	u.sugar.Warnw("", kvs...)
 }
 
 // Warnw with message
 func (u *Uber) Warnw(msg string, keysAndValues ...interface{}) {
-	u.sugar.Warnw(msg, keysAndValues...)
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
+
+	u.sugar.Warnw(msg, kvs...)
 }
 
 // Warnf formats according to a format specifier
 func (u *Uber) Warnf(format string, a ...interface{}) {
-	u.sugar.Warnf(format, a...)
+	kvs := u.get()
+	msg := u.format(format, a)
+
+	u.sugar.Warnw(msg, kvs...)
 }
 
 // Error key value
 func (u *Uber) Error(keysAndValues ...interface{}) {
-	u.sugar.Errorw("", keysAndValues...)
-}
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
 
-// Errorv use %+v
-func (u *Uber) Errorv(msg string, keysAndValues ...interface{}) {
-	u.sugar.Errorw(msg, u.logv(keysAndValues)...)
+	u.sugar.Errorw("", kvs...)
 }
 
 // Errorw with message
 func (u *Uber) Errorw(msg string, keysAndValues ...interface{}) {
-	u.sugar.Errorw(msg, keysAndValues...)
+	kvs := u.get()
+	kvs = append(kvs, keysAndValues...)
+
+	u.sugar.Errorw(msg, kvs...)
 }
 
 // Errorf formats according to a format specifier
 func (u *Uber) Errorf(format string, a ...interface{}) {
-	u.sugar.Errorf(format, a...)
+	kvs := u.get()
+	msg := u.format(format, a)
+
+	u.sugar.Errorw(msg, kvs...)
 }
 
 // With key value
-func (u *Uber) With(keysAndValues ...interface{}) Log {
-	return &Uber{
-		sugar: u.sugar.With(keysAndValues...),
-	}
+func (u *Uber) With(keysAndValues ...interface{}) {
+	u.rw.Lock()
+	u.kvs = append(u.kvs, keysAndValues...)
+	u.rw.Unlock()
 }
 
-// Withv use %+v
-func (u *Uber) Withv(keysAndValues ...interface{}) Log {
+func (u *Uber) Clone() Log {
+	kvs := u.get()
+
 	return &Uber{
-		sugar: u.sugar.With(u.logv(keysAndValues)...),
+		sugar: u.sugar.With(),
+		kvs:   kvs,
+		rw:    sync.RWMutex{},
 	}
 }
 

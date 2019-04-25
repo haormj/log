@@ -7,28 +7,24 @@ import (
 // Log interface
 type Log interface {
 	Debug(keysAndValues ...interface{})
-	Debugv(msg string, keysAndValues ...interface{})
 	Debugw(msg string, keysAndValues ...interface{})
 	Debugf(format string, a ...interface{})
 
 	Info(keysAndValues ...interface{})
-	Infov(msg string, keysAndValues ...interface{})
 	Infow(msg string, keysAndValues ...interface{})
 	Infof(format string, a ...interface{})
 
 	Warn(keysAndValues ...interface{})
-	Warnv(msg string, keysAndValues ...interface{})
 	Warnw(msg string, keysAndValues ...interface{})
 	Warnf(format string, a ...interface{})
 
 	Error(keysAndValues ...interface{})
-	Errorv(msg string, keysAndValues ...interface{})
 	Errorw(msg string, keysAndValues ...interface{})
 	Errorf(format string, a ...interface{})
 
-	With(keysAndValues ...interface{}) Log
-	Withv(keysAndValues ...interface{}) Log
+	With(keysAndValues ...interface{})
 	Flush() error
+	Clone() Log
 }
 
 type logKey struct{}

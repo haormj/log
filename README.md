@@ -21,17 +21,26 @@ import (
 )
 
 func main() {
-	l := log.With("username", "haormj")
-	l.Info("age", 11)
+	l := log.Logger.Clone()
 
+	l.With("main", "I'm main")
 	ctx := log.NewContext(context.Background(), l)
 	hello(ctx)
+	world(ctx)
+	l.Info("main", "end")
 }
 
 func hello(ctx context.Context) {
 	l, _ := log.FromContext(ctx)
-	l.Info("hello", "world")
+	l.With("hello", "1")
+	l.Infow("this is hello function")
+}
+
+func world(ctx context.Context) {
+	l, _ := log.FromContext(ctx)
+	l.With("world", 2)
+	l.Infof("this is %s function", "world")
 }
 ```
 
-If you use `With`, and pass `Log` through `Context`, pay attention to the life cycle of the `Context` to prevent memory increase
+If pass `Log` through `Context`, pay attention to the life cycle of the `Context` to prevent memory increase
